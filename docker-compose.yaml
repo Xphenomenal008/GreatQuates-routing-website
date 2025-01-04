@@ -1,0 +1,11 @@
+version: "3"
+services:
+  service1:
+    image: myweb
+    ports:
+      - "5000:5000"
+    volumes:
+      - sss:/data
+
+volumes:
+  sss:
