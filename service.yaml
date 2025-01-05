@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: myreact-service
+  name: mywebapp
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
-    app: react
+    app: mywebapp
   ports:
     - protocol: TCP
-      port: 80              # The port exposed by the service
-      targetPort: 80         # The port your container listens on
-          
+      port: 5000
+      targetPort: 5000
+      nodePort: 30007

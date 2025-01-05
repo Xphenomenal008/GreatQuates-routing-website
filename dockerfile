@@ -1,32 +1,26 @@
-# Stage 1: Builder
-FROM node:20 AS builder
+# Stage 1: Build the React application
+FROM node:18-alpine as builder
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Copy only package files to leverage caching
+# Copy package files and install dependencies
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the application files
+# Copy the application source code
 COPY . .
 
-# Build the application (replace with your actual build command)
+# Build the application
 RUN npm run build
 
-# Stage 2: Production
-FROM node:18-alpine
+# Stage 2: Serve the built files using nginx
+FROM nginx:stable-alpine
 
-# Set working directory
-WORKDIR /app
+# Copy the built files to nginx's web root directory
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy the build output from the builder stage
-COPY --from=builder /app . 
+# Expose port 80 for the web server
+EXPOSE 80
 
-# Expose the application port
-EXPOSE 5000
-
-# Start the application
-CMD [ "npm", "run", "dev" ]
+# Start nginx (default CMD in nginx image)
